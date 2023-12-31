@@ -109,7 +109,7 @@ class Airtable(object):
 
     def get(  # pylint: disable=invalid-name
             self, table_name, record_id=None, limit=0, offset=None,
-            filter_by_formula=None, view=None, max_records=0, fields=None, sort=None):
+            filter_by_formula=None, view=None, max_records=0, sort=None, fields=None):
         params = {}
         if check_string(record_id):
             url = posixpath.join(table_name, record_id)
@@ -143,7 +143,7 @@ class Airtable(object):
 
     def iterate(
             self, table_name, batch_size=0, filter_by_formula=None,
-            view=None, max_records=0, fields=None, sort=None):
+            view=None, max_records=0, sort=None, fields=None):
         """Iterate over all records of a table.
 
         Args:
@@ -168,7 +168,7 @@ class Airtable(object):
         while True:
             response = self.get(
                 table_name, limit=batch_size, offset=offset, max_records=max_records,
-                fields=fields, filter_by_formula=filter_by_formula, view=view, sort=sort)
+                fields=fields, filter_by_formula=filter_by_formula, sort=sort, view=view)
             for record in response.pop('records'):
                 yield record
             if 'offset' in response:
@@ -223,15 +223,15 @@ class Table(Generic[_T]):
 
     def get(  # pylint:disable=invalid-name
             self, record_id=None, limit=0, offset=None,
-            filter_by_formula=None, view=None, max_records=0, fields=None, sort=None):
+            filter_by_formula=None, view=None, max_records=0, sort=None, fields=None):
         return self._client.get(
-            self.table_name, record_id, limit, offset, filter_by_formula, view, max_records, fields, sort)
+            self.table_name, record_id, limit, offset, filter_by_formula, view, max_records, sort, fields)
 
     def iterate(
             self, batch_size=0, filter_by_formula=None,
-            view=None, max_records=0, fields=None):
+            view=None, max_records=0, sort=None, fields=None):
         return self._client.iterate(
-            self.table_name, batch_size, filter_by_formula, view, max_records, fields)
+            self.table_name, batch_size, filter_by_formula, view, max_records, sort, fields)
 
     def create(self, data):
         return self._client.create(self.table_name, data)
