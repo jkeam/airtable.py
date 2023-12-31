@@ -223,9 +223,9 @@ class Table(Generic[_T]):
 
     def get(  # pylint:disable=invalid-name
             self, record_id=None, limit=0, offset=None,
-            filter_by_formula=None, view=None, max_records=0, fields=None):
+            filter_by_formula=None, view=None, max_records=0, fields=None, sort=None):
         return self._client.get(
-            self.table_name, record_id, limit, offset, filter_by_formula, view, max_records, fields)
+            self.table_name, record_id, limit, offset, filter_by_formula, view, max_records, fields, sort)
 
     def iterate(
             self, batch_size=0, filter_by_formula=None,
